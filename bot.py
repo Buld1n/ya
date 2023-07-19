@@ -197,7 +197,7 @@ def handle_docs_photo(message):
 
             with open(
                 os.path.join(DATA_DIR, f"{admin_upload[message.chat.id]}.jpg")
-                if admin_upload[message.chat.id] in ["selfie", "oldphoto"]
+                if admin_upload[message.chat.id] in ["selfie", "oldphoto", "newphoto"]
                 else os.path.join(DATA_DIR, f"{admin_upload[message.chat.id]}.ogg"),
                 "wb",
             ) as new_file:
