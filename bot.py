@@ -17,6 +17,7 @@ NEXT_STEPS_FILE = "data/next_steps.txt"
 
 
 def load_data(filename):
+    '''Загружает JSON данные из файла.'''
     try:
         with open(filename, "r") as file:
             return json.load(file)
@@ -25,6 +26,7 @@ def load_data(filename):
 
 
 def save_data(filename, data):
+    '''Сохраняет данные в виде JSON в файл.'''
     dir_name = os.path.dirname(filename)
     if dir_name:
         os.makedirs(dir_name, exist_ok=True)
@@ -38,6 +40,7 @@ awaiting_next_step_input = load_data("awaiting_next_step_input.json")
 
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
+    '''Отправляет приветственное сообщение с командами.'''
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     item1 = types.KeyboardButton("/selfie")
     item2 = types.KeyboardButton("/oldphoto")
@@ -78,6 +81,7 @@ def send_welcome(message):
 
 @bot.message_handler(commands=["upload"])
 def upload(message=None):
+    '''Загружает файл.'''
     chat_id = ADMIN_ID if message is None else message.chat.id
     if str(chat_id) == ADMIN_ID:
         markup = types.InlineKeyboardMarkup()
@@ -107,6 +111,7 @@ def upload(message=None):
     func=lambda message: not message.text.startswith("/"), content_types=["text"]
 )
 def handle_text_messages(message):
+    '''Обрабатывает текстовые сообщения.'''
     if str(message.from_user.id) == ADMIN_ID and message.chat.id in admin_upload:
         if admin_upload[message.chat.id] == "repolink":
             save_data(os.path.join(DATA_DIR, "repolink.txt"), message.text)
@@ -143,6 +148,7 @@ def handle_text_messages(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
+    '''Обрабатывает inline вызовы.'''
     if call.message:
         if call.data in [
             "selfie",
@@ -170,6 +176,7 @@ def callback_inline(call):
 
 @bot.message_handler(content_types=["document", "photo", "voice"])
 def handle_docs_photo(message):
+    '''Обрабатывает присланные документы и фотографии.'''
     if str(message.from_user.id) == ADMIN_ID:
         try:
             if message.voice is not None:
@@ -206,6 +213,7 @@ def handle_docs_photo(message):
 
 
 def send_file(message, path):
+    '''Отправляет файл по заданному пути.'''
     if os.path.exists(path):
         with open(path, "rb") as file:
             if path.endswith(".jpg"):
@@ -218,21 +226,25 @@ def send_file(message, path):
 
 @bot.message_handler(commands=["selfie"])
 def send_selfie(message):
+    '''Отправляет селфи.'''
     send_file(message, os.path.join(DATA_DIR, "selfie.jpg"))
 
 
 @bot.message_handler(commands=["oldphoto"])
 def send_old_photo(message):
+    '''Отправляет старое фото.'''
     send_file(message, os.path.join(DATA_DIR, "oldphoto.jpg"))
 
 
 @bot.message_handler(commands=["newphoto"])
 def send_new_photo(message):
+    '''Отправляет новое фото.'''
     send_file(message, os.path.join(DATA_DIR, "newphoto.jpg"))
 
 
 @bot.message_handler(commands=["hobbypost"])
 def send_hobby_post(message):
+    '''Отправляет сообщение о хобби.'''
     try:
         with open(os.path.join(DATA_DIR, "hobbypost.txt"), "r") as file:
             hobby_message = file.read()
@@ -243,21 +255,25 @@ def send_hobby_post(message):
 
 @bot.message_handler(commands=["explaingpt"])
 def send_explain_gpt(message):
+    '''Отправляет аудиофайл с объяснением о GPT.'''
     send_file(message, os.path.join(DATA_DIR, "explaingpt.ogg"))
 
 
 @bot.message_handler(commands=["explainSQLvsNoSQL"])
 def send_explain_sql_vs_nosql(message):
+    '''Отправляет аудиофайл с объяснением о SQL и NoSQL.'''
     send_file(message, os.path.join(DATA_DIR, "explainSQLvsNoSQL.ogg"))
 
 
 @bot.message_handler(commands=["firstlovestory"])
 def send_first_love_story(message):
+    '''Отправляет аудиофайл с историей первой любви.'''
     send_file(message, os.path.join(DATA_DIR, "firstlovestory.ogg"))
 
 
 @bot.message_handler(commands=["repolink"])
 def send_repo_link(message):
+    '''Отправляет ссылку на репозиторий.'''
     try:
         with open(os.path.join(DATA_DIR, "repolink.txt"), "r") as file:
             repo_link = file.read()
@@ -268,6 +284,7 @@ def send_repo_link(message):
 
 @bot.message_handler(commands=["nextstep"])
 def next_step(message):
+    '''Запускает процесс ввода следующего шага.'''
     split_message = message.text.split(maxsplit=1)
 
     if len(split_message) > 1:
@@ -297,6 +314,7 @@ def next_step(message):
     content_types=["text"],
 )
 def next_step_input(message):
+    '''Обрабатывает ввод следующего шага.'''
     del awaiting_next_step_input[message.chat.id]
     save_data("data/awaiting_next_step_input.json", awaiting_next_step_input)
 
