@@ -47,7 +47,8 @@ def send_welcome(message):
     item6 = types.KeyboardButton("/explainSQLvsNoSQL")
     item7 = types.KeyboardButton("/firstlovestory")
     item8 = types.KeyboardButton("/repolink")
-    markup.add(item1, item2, item3, item4, item5, item6, item7, item8)
+    item9 = types.KeyboardButton("/nextstep")
+    markup.add(item1, item2, item3, item4, item5, item6, item7, item8, item9)
 
     if str(message.from_user.id) == ADMIN_ID:
         item9 = types.KeyboardButton("/upload")
@@ -63,7 +64,8 @@ def send_welcome(message):
         "/explaingpt - чтобы услышать объяснение GPT\n"
         "/explainSQLvsNoSQL - чтобы услышать разницу SQL и NoSQL\n"
         "/firstlovestory - чтобы услышать историю любви\n"
-        "/repolink - чтобы получить реп этого бота\n\n"
+        "/repolink - чтобы получить реп этого бота\n"
+        "/nextstep - чтобы загрузить для меня следующие шаги\n\n"
         "Также доступен текстовый ввод: \n"
         "селфи\n"
         "старое фото\n"
